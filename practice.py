@@ -15,6 +15,7 @@ def template(contents, content, id = None): #중복제거, ul은순서가 없을
    if (id != None):
       contextUI = f'''
          <li><a href ="/update/{id}/">update</a></li>
+         <li><form action = "/delete/{id}" method ="POST"><input type ="submit" value ="delete"></li>
       '''
    return f''' <!doctype html>
    <html>
@@ -109,5 +110,13 @@ def read(id):
    print(title, body)
    return template(getContents(), f'<h2>{title}</h2>{body}', id)
 
+
+@app.route('/delete/<int:id>/', methods = ['POST']) # POST방식만 허용
+def delete(id):
+   for topic in topics:
+      if id == topic['id']:
+         topics.remove(topic)
+         break
+   return redirect('/') #redirect = 글을 삭제하면 상세보기 페이지로 갈 수가 없어서
 
 app.run(port = 5001, debug = True)
